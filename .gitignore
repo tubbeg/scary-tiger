@@ -1,1 +1,4 @@
 out/
+dist/
+*.png
+node_modules
