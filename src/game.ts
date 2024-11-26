@@ -1,52 +1,61 @@
 import * as Phaser from "phaser"
 import * as ECS from "miniplex"
+import { Effect, Option, Console } from "effect"
+import {createConfig} from "./config"
+import {PlayerEntitiesOption, SpriteType, Entity, PlayerEntity} from "./types"
+import {playerQuery} from "./queries"
 //import Phaser = require("phaser");
-
-
-enum SpriteType {
-    Player,
-    Brick,
-    Fire,
-    Ice,
-}
 
 const playerId = "tiger"
 
-
-type Entity = {
-    sprite?: Phaser.GameObjects.Sprite,
-    texture? : String,
-    st?: SpriteType
-}
-
-function createPlayerSprite (t : Phaser.Scene) : Phaser.GameObjects.Sprite {
-    return t.add.sprite(400,400,playerId);
-}
-
-
-function createPlayer ( t : Phaser.Scene, world : ECS.World) : ECS.World{
-    return world.add({
+function createPlayer ( t : Phaser.Scene, world : ECS.World,x : number,y : number) : ECS.World{
+    const _ = world.add({
         texture: playerId,
-        sprite: createPlayerSprite(t),
-        st: SpriteType.Player
-      })      
+        sprite: (t.add.sprite(x,y, playerId)),
+        player: SpriteType.Player,
+      });
+    return world;
 }
 
-function create_queries (world : ECS.World) {
-    return {
-        moving: world.with("position", "velocity"),
-        health: world.with("health")
+function updatePlayerPosition (player : PlayerEntity, index : number){
+    return Effect.sync(() => {
+        
+    })
+}
+
+//SIDE EFFECT!
+function movePlayers (players : Array<PlayerEntity>){
+    Effect.forEach(players, updatePlayerPosition, {discard: true})
+}
+
+//SIDE EFFECT!
+function movePlayerEntitySystem (world : ECS.World) {
+    return Effect.sync(() => {
+        Option.map(playerQuery(world), (arr) => {
+            movePlayers(arr);
+        })
+    })
+}
+
+function addKeyboardCallback(t : Phaser.Scene, world : ECS.World){
+    if (t.input.keyboard != null)
+    {
+        t.input.keyboard.on('keydown-A', (event : any) => {
+            
+        });
     }
-  }
+    return world;
+}
 
 
 class ForegroundScene extends Phaser.Scene
 {
     world : ECS.World;
-    
+    playerQuery : PlayerEntitiesOption;
     constructor(){
         super();
         this.world = new ECS.World<Entity>();
+        this.playerQuery = playerQuery(this.world);
     }
 
     preload ()
@@ -55,12 +64,11 @@ class ForegroundScene extends Phaser.Scene
         this.load.image('brick', 'MySprite.png');
     }
 
-
     create ()
     {
-        this.world = createPlayer(this, this.world);
+        this.world = createPlayer(this, this.world,400,400);
+        this.world = addKeyboardCallback(this, this.world);
         //this.add.image(400, 300, 'tiger');
-
     }
 
     override update(){
@@ -71,24 +79,9 @@ class ForegroundScene extends Phaser.Scene
 }
 
 
-const config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    scene: ForegroundScene,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 200, x: 0 }
-        }
-    }
-};
-
-
-
 function run() {
-
-    return (new Phaser.Game(config));
+    const s = createConfig([(new ForegroundScene())]);
+    return (new Phaser.Game(s));
 }
 
 run();

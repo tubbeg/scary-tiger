@@ -5,14 +5,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
-    "watch":"vite",
-    "production":"vite build"
+    "watch": "vite",
+    "production": "vite build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "effect": "^3.10.16",
     "miniplex": "^2.0.0",
     "phaser": "^3.87.0"
   },
