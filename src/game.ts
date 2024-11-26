@@ -25,35 +25,20 @@ function createPlayer ( t : Phaser.Scene, world : ECS.World,x : number,y : numbe
 function inputToPos (s : Phaser.GameObjects.Sprite, input : InputEntity) : Position{
     let i = input.input;
     //console.log(i);
-
-    switch(i[0], i[1])
-    {
-        case (InputHorizontalType.NoInput,InputVerticalType.NoInput):
-            return [(s.x ), (s.y )];
-        case (InputHorizontalType.Left,InputVerticalType.Up):
-            console.log("Trigger left up");
-            console.log(i[0]);
-            console.log(InputHorizontalType.Left);
-            return [(s.x - 1), (s.y + 1)];
-        case (InputHorizontalType.Left,InputVerticalType.Down):
-            return [(s.x - 1), (s.y - 1)];
-        case (InputHorizontalType.Right,InputVerticalType.Up):
-            console.log("Trigger right up");
-            return [(s.x + 1), (s.y + 1)];
-        case (InputHorizontalType.Right,InputVerticalType.Down):
-            return [(s.x + 1), (s.y - 1)];
-        case (InputHorizontalType.Right,InputVerticalType.NoInput):
-            return [(s.x + 1), (s.y )];
-        case (InputHorizontalType.Left,InputVerticalType.NoInput):
-            return [(s.x - 1), (s.y )];
-        case (InputHorizontalType.NoInput,InputVerticalType.Up):
-            console.log("Trigger up");
-            return [(s.x ), (s.y + 1)];
-        case (InputHorizontalType.NoInput,InputVerticalType.Down):
-            return [(s.x ), (s.y - 1)];
-        default:
-            return [s.x,s.y];
-    }
+    let x = 0,y = 0;
+    if (i[0] == InputHorizontalType.Left)
+        x = s.x - 1;
+    if (i[0] == InputHorizontalType.Right)
+        x = s.x + 1;
+    if (i[0] == InputHorizontalType.NoInput)
+        x = s.x;
+    if (i[1] == InputVerticalType.Up)
+        y = s.y + 1;
+    if (i[1] == InputVerticalType.Down)
+        y = s.y - 1;
+    if (i[1] == InputVerticalType.NoInput)
+        y = s.y;
+    return [x,y];
 }
 
 
