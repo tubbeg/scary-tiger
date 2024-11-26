@@ -63,3 +63,13 @@ export type Entity = {
     fire?: SpriteType.Fire
     input?: [InputHorizontalType, InputVerticalType]
 }
+
+
+export function getSingletonComponent<Type> (a : Array<Type>) : Option<Type>{
+    if (a.length < 1)
+        return Option.none();
+    const result = a.at(0);
+    if (result != null)
+        return Option.some(result);
+    return Option.none();
+}
