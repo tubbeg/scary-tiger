@@ -12,11 +12,26 @@ export enum SpriteType {
     Ice,
 }
 
+export enum InputVerticalType {
+
+    Up,
+    Down,
+    NoInput
+}
+
+export enum InputHorizontalType {
+
+    Left,
+    Right,
+    NoInput
+}
+
+
+export type Position = [number,number]
+
+
 export type InputEntity = {
-    down: boolean,
-    up: boolean,
-    left: boolean,
-    right: boolean,
+    input: [InputHorizontalType, InputVerticalType]
 }
 
 export type PlayerEntity = {
@@ -38,6 +53,7 @@ export type FireEntity = {
 }
 
 export type PlayerEntitiesOption = Option<Array<PlayerEntity>>
+export type InputEntitiesOption = Option<Array<InputEntity>>
 
 export type Entity = {
     sprite?: Phaser.GameObjects.Sprite,
@@ -45,5 +61,5 @@ export type Entity = {
     player?: SpriteType.Player,
     brick?: SpriteType.Brick,
     fire?: SpriteType.Fire
-    input?: InputEntity
+    input?: [InputHorizontalType, InputVerticalType]
 }
